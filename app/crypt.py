@@ -5,13 +5,13 @@
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
 import hashlib
-#import app
+import app
 
 
 class Hasher():
 
     def __init__(self, raw_key):
-        self.encoding_ = "UTF-8"
+        self.encoding_ = app.encoding_std
         self.key = self.hashit(raw_key)
         
 
