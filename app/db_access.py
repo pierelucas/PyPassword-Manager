@@ -1,3 +1,7 @@
+# Author: PiereLucas(Julian Huch)
+# MIT LICENSE
+
+
 import sqlite3
 import os
 import sys
@@ -18,11 +22,12 @@ class Gen_DB():
                 print("Generate new Database: %s" % db_name)
                 connection = sqlite3.connect(db_name)
                 cursor = connection.cursor()
-                sql = "CREATE TABLE main("  \
-                    "Service TEXT, " \
-                    "Password TEXT, " \
-                    "Created TEXT, " \
-                    "LastMod TEXT)"
+                sql = f"CREATE TABLE main("  \
+                    f"Service TEXT, " \
+                    f"Login TEXT, " \
+                    f"Password TEXT, " \
+                    f"Created TEXT, " \
+                    f"LastMod TEXT)"
                 cursor.execute(sql)
                 print("%s \n Successfully generated Database: %s" % (sql, db_name))
                 del sql; del cursor
@@ -37,33 +42,51 @@ class DBAccess(Gen_DB):
     def __init__(self, db_name="passmandb"):
         super(DBAccess, self).__init__(db_name)
 
-        self.date_today = time.strftime("%d.%m.%Y", time.localtime())
+        self.date_today = time.strftime("%d.%m.%Y - %H:%M", time.localtime())
 
         self.db_name = db_name
         self.cursor = self.connection.cursor()
         self.execute = lambda var: self.cursor.execute(var)
-    
-    def writedb(self, service_name, password):
-        sql = ""
+
+    def writedb(self, service_name, login_name, password):
+ 
+        def modify_entry(old_date):
+            sql = f"INSERT INTO main VALUES('{service_name}', " \
+                f"'{login_name}', '{password}', '{old_date}', '{self.date_today}')"
+            self.execute(sql)
+            self.connection.commit()
+
+        def new_entry():
+            sql = f"INSERT INTO main VALUES('{service_name}', " \
+                f"'{login_name}', '{password}', '{self.date_today}', '{self.date_today}')"
+            self.execute(sql)
+            self.connection.commit()
+
+        sql = "SELECT * FROM main"
         self.execute(sql)
+        for data in self.cursor:
+            if service_name == data[0]:
+                modify_entry(old_date=data[3])
+                return
+        new_entry()
+        return
 
     def readdb(self, service_name):
         sql = "SELECT * FROM main"
         self.execute(sql)
-        for data in self.cursor:
-            if service_name in data[0]:
-                return data[0], data[1], data[2], data[3]
-            else:
-                return "Service Name not found in DB: %s" % self.db_name
-
-    def moddb(self, service_name, password):
-        sql = ""
-        self.execute(sql)
+        return [data for data in self.cursor if service_name == data[0]]
 
     def deldb(self, service_name):
         sql = ""
         self.execute(sql)
 
+    def close(self):
+        self.connection.close()
+
 
 if __name__ == "__main__":
-    pass
+    dba = DBAccess()
+    dba.writedb("google.de", "123", "345")
+    for data in dba.readdb("google.de"):
+        print("Service: %s  Login: %s   Password: %s    Created: %s     Modified: %s" % (data[0], data[1], data[2], data[3], data[4]))
+    dba.close()

@@ -1,3 +1,7 @@
+# Author: PiereLucas(Julian Huch)
+# MIT LICENSE
+
+
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
 import hashlib
