@@ -27,7 +27,8 @@ class Gen_DB():
                     f"Login TEXT, " \
                     f"Password TEXT, " \
                     f"Created TEXT, " \
-                    f"LastMod TEXT)"
+                    f"LastMod TEXT, " \
+                    f"Note TEXT)"
                 cursor.execute(sql)
                 print("%s \n Successfully generated Database: %s" % (sql, db_name))
                 del sql; del cursor
@@ -48,17 +49,17 @@ class DBAccess(Gen_DB):
         self.cursor = self.connection.cursor()
         self.execute = lambda var: self.cursor.execute(var)
 
-    def writedb(self, service_name, login_name, password):
+    def writedb(self, service_name, login_name, password, note):
  
-        def modify_entry(old_date):
+        def new_entry(old_date):
             sql = f"INSERT INTO main VALUES('{service_name}', " \
-                f"'{login_name}', '{password}', '{old_date}', '{self.date_today}')"
+                f"'{login_name}', '{password}', '{old_date}', '{self.date_today}', '{note}')"
             self.execute(sql)
             self.connection.commit()
 
-        def new_entry():
+        def blank_new_entry():
             sql = f"INSERT INTO main VALUES('{service_name}', " \
-                f"'{login_name}', '{password}', '{self.date_today}', '{self.date_today}')"
+                f"'{login_name}', '{password}', '{self.date_today}', '{self.date_today}', '{note}')"
             self.execute(sql)
             self.connection.commit()
 
@@ -66,9 +67,9 @@ class DBAccess(Gen_DB):
         self.execute(sql)
         for data in self.cursor:
             if service_name == data[0]:
-                modify_entry(old_date=data[3])
+                new_entry(old_date=data[3])
                 return
-        new_entry()
+        blank_new_entry()
         return
 
     def readdb(self, service_name):
@@ -77,8 +78,10 @@ class DBAccess(Gen_DB):
         return [data for data in self.cursor if service_name == data[0]]
 
     def deldb(self, service_name):
-        sql = ""
+        sql = f"DELETE FROM main WHERE(Service='{service_name}')"
         self.execute(sql)
+        self.connection.commit()
+        return
 
     def close(self):
         self.connection.close()
@@ -86,7 +89,9 @@ class DBAccess(Gen_DB):
 
 if __name__ == "__main__":
     dba = DBAccess()
-    dba.writedb("google.de", "123", "345")
-    for data in dba.readdb("google.de"):
-        print("Service: %s  Login: %s   Password: %s    Created: %s     Modified: %s" % (data[0], data[1], data[2], data[3], data[4]))
+    dba.writedb("google.de", "123", "345", "Thats my first account")
+    #dba.deldb("google.de")
+    for i, data in enumerate(dba.readdb("google.de"), start=1):
+        print("[%d] Service: %s  Login: %s   Password: %s    Created: %s     Modified: %s    Note: %s" 
+            % (i, data[0], data[1], data[2], data[3], data[4], data[5]))
     dba.close()
