@@ -13,6 +13,9 @@ class Gen_DB():
 
     def __init__(self, db_name):
         self.connection = self.generate_db(db_name)
+    
+    def __repr__(self):
+        return "%s" % self.__class__.__name__
 
     def generate_db(self, db_name):
         try:
@@ -48,6 +51,9 @@ class DBAccess(Gen_DB):
         self.db_name = db_name
         self.cursor = self.connection.cursor()
         self.execute = lambda var: self.cursor.execute(var)
+    
+    def __repr__(self):
+        return "%s" % self.__class__.__name__
 
     def writedb(self, service_name, login_name, password, note):
  

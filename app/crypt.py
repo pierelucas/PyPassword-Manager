@@ -13,8 +13,10 @@ class Hasher():
     def __init__(self, raw_key):
         self.encoding_ = app.encoding_std
         self.key = self.hashit(raw_key)
+    
+    def __repr__(self):
+        return "%s" % self.__class__.__name__
         
-
     def hashit(self, key) -> bytes:
         return hashlib.sha256(str(key).encode(self.encoding_))
 
@@ -24,6 +26,9 @@ class AES_ECB(Hasher):
     def __init__(self, raw_key):
         super(AES_ECB, self).__init__(raw_key)
         self.aes = AES.new(self.key.digest(), AES.MODE_ECB)
+    
+    def __repr__(self):
+        return "%s" % self.__class__.__name__
 
     def make_len(self, string) -> bytes:
         bytestring = string.encode(self.encoding_)
