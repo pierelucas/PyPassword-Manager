@@ -9,28 +9,41 @@ import random
 import time
 
 
-from colorama import Fore, Style
-Green = Fore.GREEN
-Red = Fore.RED
-Reset = Style.RESET_ALL
-
+from hashlib import sha3_256
 
 class Gen_DB():
 
-    def __init__(self, db_name):
+    def __init__(self, db_name, user):
+        self.user_hash = sha3_256(user.encode("UTF-8")).hexdigest()
         self.connection = self.generate_db(db_name)
+
     
     def __repr__(self):
         return "%s" % self.__class__.__name__
 
     def generate_db(self, db_name):
         try:
+
             if os.path.isfile(db_name):
-                return sqlite3.connect(db_name)
-            else:
-                print(Green + "Generate new Database: %s" + Reset % db_name)
                 connection = sqlite3.connect(db_name)
                 cursor = connection.cursor()
+
+                sql = "SELECT * FROM user"
+                cursor.execute(sql)
+                for data in cursor:
+                    if self.user_hash == data[0]:
+                        del sql; del cursor
+                        return connection
+                    else:
+                        print("Wrong Username for DB: %s" % db_name)
+                        sys.exit(1)
+
+            else:
+                print("Generate new Database: %s" % db_name)
+
+                connection = sqlite3.connect(db_name)
+                cursor = connection.cursor()
+
                 sql = f"CREATE TABLE main("  \
                     f"Service TEXT, " \
                     f"Login TEXT, " \
@@ -39,18 +52,27 @@ class Gen_DB():
                     f"LastMod TEXT, " \
                     f"Note TEXT)"
                 cursor.execute(sql)
-                print(Green + "Successfully generated Database: %s" + Reset % db_name)
+
+                sql = f"CREATE TABLE user(" \
+                    f"Username TEXT)"
+                cursor.execute(sql)
+
+                sql = f"INSERT INTO user VALUES('{self.user_hash}')"
+                cursor.execute(sql)
+                connection.commit()
+
+                print("Successfully generated Database: %s" % db_name)
                 del sql; del cursor
                 return connection
         except Exception as ex:
-            print(Red + "Error in %s : %s" + Reset % (self.__class__.__name__, ex))
+            print("Error in %s : %s" % (self.__class__.__name__, ex))
             sys.exit(1)
 
 
 class DBAccess(Gen_DB):
 
-    def __init__(self, db_name):
-        super(DBAccess, self).__init__(db_name)
+    def __init__(self, db_name, user):
+        super(DBAccess, self).__init__(db_name, user)
 
         self.date_today = time.strftime("%d.%m.%Y - %H:%M", time.localtime())
 
