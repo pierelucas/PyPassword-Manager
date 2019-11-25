@@ -7,6 +7,12 @@ from getpass import getpass
 from app import *
 
 
+from colorama import Fore, Style
+Green = Fore.GREEN
+Red = Fore.RED
+Reset = Style.RESET_ALL
+
+
 class RunClass():
 
     def __init__(self):
@@ -63,14 +69,14 @@ class RunClass():
             dba = db_access.DBAccess(db_name=self.db_name if self.db_name != "" else "passmandb")
             aes = cryptmodule.AES_ECB(self.cryptkey)
             for i, data in enumerate(dba.readdb(self.service_name), start=1):
-                print("[%d] Service: %s  Login: %s   Password: %s    Created: %s     Modified: %s    Note: %s" 
+                print("-----[%d]-----\nService: %s\nLogin: %s\nPassword: %s\nService Created: %s\nModified: %s\nNote: %s" 
                     % (i, data[0], data[1], aes.dec(data[2]), data[3], data[4], data[5]))
             dba.close()
             
         elif choice == 3:
             self.service_name = input("Service > ")
             dba = db_access.DBAccess(db_name=self.db_name if self.db_name != "" else "passmandb")
-            dba.db_name(self.service_name)
+            dba.deldb(self.service_name)
             dba.close()
 
     def run(self):

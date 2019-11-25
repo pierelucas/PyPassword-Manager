@@ -9,6 +9,12 @@ import random
 import time
 
 
+from colorama import Fore, Style
+Green = Fore.GREEN
+Red = Fore.RED
+Reset = Style.RESET_ALL
+
+
 class Gen_DB():
 
     def __init__(self, db_name):
@@ -22,7 +28,7 @@ class Gen_DB():
             if os.path.isfile(db_name):
                 return sqlite3.connect(db_name)
             else:
-                print("Generate new Database: %s" % db_name)
+                print(Green + "Generate new Database: %s" + Reset % db_name)
                 connection = sqlite3.connect(db_name)
                 cursor = connection.cursor()
                 sql = f"CREATE TABLE main("  \
@@ -33,11 +39,11 @@ class Gen_DB():
                     f"LastMod TEXT, " \
                     f"Note TEXT)"
                 cursor.execute(sql)
-                print("Successfully generated Database: %s" % db_name)
+                print(Green + "Successfully generated Database: %s" + Reset % db_name)
                 del sql; del cursor
                 return connection
         except Exception as ex:
-            print("Error in %s : %s" % (self.__class__.__name__, ex))
+            print(Red + "Error in %s : %s" + Reset % (self.__class__.__name__, ex))
             sys.exit(1)
 
 
