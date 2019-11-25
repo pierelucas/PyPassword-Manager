@@ -33,6 +33,7 @@ class Gen_DB():
                 for data in cursor:
                     if self.user_hash == data[0]:
                         del sql; del cursor
+                        print("Sucessfully logged in DB: %s" % db_name)
                         return connection
                     else:
                         print("Wrong Username for DB: %s" % db_name)
@@ -103,8 +104,10 @@ class DBAccess(Gen_DB):
         for data in self.cursor:
             if service_name == data[0]:
                 new_entry(old_date=data[3])
+                print("Successfully adding entry to Columne [%s] in DB: %s" % (service_name, self.db_name))
                 return
         blank_new_entry()
+        print("Successfully adding NEW Columne [%s] to DB: %s" % (service_name, self.db_name))
         return
 
     def readdb(self, service_name):
