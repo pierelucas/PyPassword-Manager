@@ -4,7 +4,8 @@
 
 import time
 from getpass import getpass
-from app import *
+import crypt
+import db_access
 
 
 class RunClass():
@@ -67,5 +68,6 @@ class RunClass():
         pass
         
 
-rc = RunClass()
-rc.run()
+def main():
+    rc = RunClass()
+    rc.run()

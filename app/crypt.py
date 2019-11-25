@@ -5,13 +5,13 @@
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
 import hashlib
-import app
+from pypassconf import Config
 
 
 class Hasher():
 
     def __init__(self, raw_key):
-        self.encoding_ = app.encoding_std
+        self.encoding_ = Config.encoding_std
         self.key = self.hashit(raw_key)
     
     def __repr__(self):
