@@ -50,11 +50,12 @@ class RunClass():
         if choice == 1:
             dba = db_access.DBAccess(db_name=self.db_name if self.db_name != "" else "passmandb", user=self.username)
 
-            self.service_name, self.login, password, self.note = input("Service, Login, Password, Note > ").split(",")
+            self.service_name = input("Service > ")
             aes = cryptmodule.AES_ECB(self.username)
-            self.password = aes.enc(password)
+            self.login, self.password, self.note = [aes.enc(i) for i in list(input("Login, Password, Note > ").split(", "))]
             
             dba.writedb(self.service_name, self.login, self.password, self.note)
+
             dba.close()
 
         elif choice == 2:
@@ -62,9 +63,10 @@ class RunClass():
 
             self.service_name = input("Service > ")
             aes = cryptmodule.AES_ECB(self.username)
+
             for i, data in enumerate(dba.readdb(self.service_name), start=1):
-                print("-----[%d]-----\nService: %s\nLogin: %s\nPassword: %s\nService Created: %s\nModified: %s\nNote: %s" 
-                    % (i, data[0], data[1], aes.dec(data[2]), data[3], data[4], data[5]))
+                print("-----[%d]-----\nService: %s\nLogin: %s\nPassword: %s\nService Created: %s\nEntry Created: %s\nNote: %s" 
+                    % (i, data[0], aes.dec(data[1]), aes.dec(data[2]), data[3], data[4], aes.dec(data[5])))
             
             dba.close()
             

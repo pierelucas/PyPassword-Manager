@@ -33,14 +33,14 @@ class Gen_DB():
                 for data in cursor:
                     if self.user_hash == data[0]:
                         del sql; del cursor
-                        print("Sucessfully logged in DB: %s" % db_name)
+                        print("Sucessfully logged in DB: [%s]" % db_name)
                         return connection
                     else:
-                        print("Wrong Username for DB: %s" % db_name)
+                        print("Wrong Username for DB: [%s]" % db_name)
                         sys.exit(1)
 
             else:
-                print("Generate new Database: %s" % db_name)
+                print("CREATE NEW DB: [%s]" % db_name)
 
                 connection = sqlite3.connect(db_name)
                 cursor = connection.cursor()
@@ -62,7 +62,7 @@ class Gen_DB():
                 cursor.execute(sql)
                 connection.commit()
 
-                print("Successfully generated Database: %s" % db_name)
+                print("Successfully CREATED DB: [%s]" % db_name)
                 del sql; del cursor
                 return connection
         except Exception as ex:
@@ -104,10 +104,10 @@ class DBAccess(Gen_DB):
         for data in self.cursor:
             if service_name == data[0]:
                 new_entry(old_date=data[3])
-                print("Successfully adding entry to Columne [%s] in DB: %s" % (service_name, self.db_name))
+                print("Successfully INSERT data INTO Columne: [%s] in DB: [%s]" % (service_name, self.db_name))
                 return
         blank_new_entry()
-        print("Successfully adding NEW Columne [%s] to DB: %s" % (service_name, self.db_name))
+        print("Successfully CREATE and INSERT data INTO Columne: [%s] in DB: [%s]" % (service_name, self.db_name))
         return
 
     def readdb(self, service_name):
@@ -119,6 +119,8 @@ class DBAccess(Gen_DB):
         sql = f"DELETE FROM main WHERE(Service='{service_name}')"
         self.execute(sql)
         self.connection.commit()
+
+        print("Sucessfully DELETED Columne: [%s] from DB: [%s]" % (service_name, self.db_name))
         return
 
     def close(self):
