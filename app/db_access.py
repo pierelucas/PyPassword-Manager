@@ -33,7 +33,7 @@ class Gen_DB():
                     f"LastMod TEXT, " \
                     f"Note TEXT)"
                 cursor.execute(sql)
-                print("%s \n Successfully generated Database: %s" % (sql, db_name))
+                print("Successfully generated Database: %s" % db_name)
                 del sql; del cursor
                 return connection
         except Exception as ex:
@@ -43,7 +43,7 @@ class Gen_DB():
 
 class DBAccess(Gen_DB):
 
-    def __init__(self, db_name="passmandb"):
+    def __init__(self, db_name):
         super(DBAccess, self).__init__(db_name)
 
         self.date_today = time.strftime("%d.%m.%Y - %H:%M", time.localtime())
@@ -94,7 +94,7 @@ class DBAccess(Gen_DB):
 
 
 if __name__ == "__main__":
-    dba = DBAccess()
+    dba = DBAccess("passmandb")
     dba.writedb("google.de", "123", "345", "Thats my first account")
     #dba.deldb("google.de")
     for i, data in enumerate(dba.readdb("google.de"), start=1):
