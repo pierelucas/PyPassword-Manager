@@ -7,14 +7,14 @@ import os
 import sys
 import random
 import time
+from hashlib import sha256
 
-
-from hashlib import sha3_256
 
 class Gen_DB():
+    """ Class for checking of the given database and username exists """
 
     def __init__(self, db_name, user):
-        self.user_hash = sha3_256(user.encode("UTF-8")).hexdigest()
+        self.user_hash = sha256(user.encode("UTF-8")).hexdigest()
         self.connection = self.generate_db(db_name)
 
     
@@ -70,6 +70,7 @@ class Gen_DB():
 
 
 class DBAccess(Gen_DB):
+    """ Write, read and delete entrys in the given database """
 
     def __init__(self, db_name, user):
         super(DBAccess, self).__init__(db_name, user)
@@ -122,8 +123,10 @@ class DBAccess(Gen_DB):
 
 
 if __name__ == "__main__":
-    dba = DBAccess("passmandb")
-    dba.writedb("google.de", "123", "345", "Thats my first account")
+    """ This is just for debugging """
+
+    dba = DBAccess("passmandb", "Peter")
+    dba.writedb("google.de", "peter@aol.com", "s3cr3tpass", "Thats my first account")
     #dba.deldb("google.de")
     for i, data in enumerate(dba.readdb("google.de"), start=1):
         print("[%d] Service: %s  Login: %s   Password: %s    Created: %s     Modified: %s    Note: %s" 

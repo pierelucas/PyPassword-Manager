@@ -2,16 +2,14 @@
 # MIT LICENSE
 
 
-import time
-from getpass import getpass
 from app import *
 
 
 class RunClass():
+    """ Runclass for handling all in and out streams """
 
     def __init__(self):
-        
-        self.lt = time.localtime()
+
 
         self.author = "Julian Huch"
         self.license = "MIT LICENSE"
@@ -47,7 +45,7 @@ class RunClass():
         print("%s\n%s" % (self.banner_txt, self.menu_txt))
         choice = int(input("Choice > "))
         self.db_name = input("DB Name [passmandb] > ")
-        self.username = getpass("Username > ")
+        self.username = input("Username > ")
 
         if choice == 1:
             dba = db_access.DBAccess(db_name=self.db_name if self.db_name != "" else "passmandb", user=self.username)
@@ -83,5 +81,7 @@ class RunClass():
 
 
 if __name__ == "__main__":
+    """ Run the Programm ! """
+
     rc = RunClass()
     rc.run()

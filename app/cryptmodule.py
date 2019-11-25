@@ -4,10 +4,11 @@
 
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
-import hashlib
+from hashlib import sha256
 
 
 class Hasher():
+    """ Hash Class for sha256 hashing the key """
 
     def __init__(self, raw_key):
         self.encoding_ = "UTF-8"
@@ -17,10 +18,11 @@ class Hasher():
         return "%s" % self.__class__.__name__
         
     def hashit(self, key) -> bytes:
-        return hashlib.sha256(str(key).encode(self.encoding_))
+        return sha256(str(key).encode(self.encoding_))
 
 
 class AES_ECB(Hasher):
+    """ Class with functions for en/decrypt the given strings """
 
     def __init__(self, raw_key):
         super(AES_ECB, self).__init__(raw_key)
@@ -47,6 +49,7 @@ class AES_ECB(Hasher):
 
 
 if __name__ == "__main__":
+    """ This is just for debugging """
 
     string_to_encrypt = str(input("Raw String > "))
     key = input("Encryption Key > ")
