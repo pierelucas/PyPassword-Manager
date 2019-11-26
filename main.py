@@ -27,7 +27,8 @@ class RunClass():
         self.menu_txt = """
         [1] Write entry to DB
         [2] Read entry's
-        [3] Delete entry's
+        [3] Read whole DB
+        [4] Delete entry's
         """
 
         self.cryptkey = ""
@@ -64,13 +65,24 @@ class RunClass():
             self.service_name = input("Service > ")
             aes = cryptmodule.AES_ECB(self.username)
 
-            for i, data in enumerate(dba.readdb(self.service_name), start=1):
+            for i, data in enumerate(dba.read_columne(self.service_name), start=1):
+                print("-----[%d]-----\nService: %s\nLogin: %s\nPassword: %s\nService Created: %s\nEntry Created: %s\nNote: %s" 
+                    % (i, data[0], aes.dec(data[1]), aes.dec(data[2]), data[3], data[4], aes.dec(data[5])))
+            
+            dba.close()
+
+        elif choice == 3:
+            dba = db_access.DBAccess(db_name=self.db_name if self.db_name != "" else "passmandb", user=self.username)
+
+            aes = cryptmodule.AES_ECB(self.username)
+
+            for i, data in enumerate(dba.read_db(), start=1):
                 print("-----[%d]-----\nService: %s\nLogin: %s\nPassword: %s\nService Created: %s\nEntry Created: %s\nNote: %s" 
                     % (i, data[0], aes.dec(data[1]), aes.dec(data[2]), data[3], data[4], aes.dec(data[5])))
             
             dba.close()
             
-        elif choice == 3:
+        elif choice == 4:
             dba = db_access.DBAccess(db_name=self.db_name if self.db_name != "" else "passmandb", user=self.username)
             
             self.service_name = input("Service > ")

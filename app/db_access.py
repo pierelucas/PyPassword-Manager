@@ -110,10 +110,15 @@ class DBAccess(Gen_DB):
         print("Successfully CREATE and INSERT data INTO Columne: [%s] in DB: [%s]" % (service_name, self.db_name))
         return
 
-    def readdb(self, service_name):
+    def read_columne(self, service_name):
         sql = "SELECT * FROM main"
         self.execute(sql)
         return [data for data in self.cursor if service_name == data[0]]
+
+    def read_db(self):
+        sql = "SELECT * FROM main"
+        self.execute(sql)
+        return  [data for data in self.cursor]
 
     def deldb(self, service_name):
         sql = f"DELETE FROM main WHERE(Service='{service_name}')"
@@ -133,7 +138,7 @@ if __name__ == "__main__":
     dba = DBAccess("passmandb", "Peter")
     dba.writedb("google.de", "peter@aol.com", "s3cr3tpass", "Thats my first account")
     #dba.deldb("google.de")
-    for i, data in enumerate(dba.readdb("google.de"), start=1):
+    for i, data in enumerate(dba.read_columne("google.de"), start=1):
         print("[%d] Service: %s  Login: %s   Password: %s    Created: %s     Modified: %s    Note: %s" 
             % (i, data[0], data[1], data[2], data[3], data[4], data[5]))
     dba.close()
