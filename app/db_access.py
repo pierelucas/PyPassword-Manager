@@ -17,7 +17,6 @@ class Gen_DB():
         self.user_hash = sha256(user.encode("UTF-8")).hexdigest()
         self.connection = self.generate_db(db_name)
 
-    
     def __repr__(self):
         return "%s" % self.__class__.__name__
 
