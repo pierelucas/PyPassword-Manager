@@ -29,6 +29,11 @@ class RunClass():
         [2] Read entry's
         [3] Read whole DB
         [4] Delete entry's
+
+
+                    INFO:
+        Default database name: passmandb.
+        Your username is your encryption key.
         """
 
         self.cryptkey = ""
@@ -39,6 +44,8 @@ class RunClass():
         self.password = ""
         self.note = ""
 
+        self.scoring = lambda user: password_scoring.Scoring(user)
+
     def __repr__(self):
         return "%s" % self.__class__.__name__
     
@@ -47,6 +54,9 @@ class RunClass():
         choice = int(input("Choice > "))
         self.db_name = input("DB Name [passmandb] > ")
         self.username = input("Username > ")
+
+        scoring = self.scoring(self.username)
+        print("\n" + "\n".join([f"{key:<15}:{value}" for key, value in scoring().items()]) + "\n")
 
         if choice == 1:
             dba = db_access.DBAccess(db_name=self.db_name if self.db_name != "" else "passmandb", user=self.username)
