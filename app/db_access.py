@@ -14,13 +14,13 @@ class Gen_DB():
     """ Class for checking of the given database and username exists """
 
     def __init__(self, db_name, user):
-        self.user_hash = sha256(user.encode("UTF-8")).hexdigest()
-        self.connection = self.generate_db(db_name)
+        self.user_hash = lambda x: sha256(x.encode("UTF-8")).hexdigest()
+        self.connection = self.generate_db(db_name, user)
 
     def __repr__(self):
         return "%s" % self.__class__.__name__
 
-    def generate_db(self, db_name):
+    def generate_db(self, db_name, user):
         try:
 
             if os.path.isfile(db_name):
@@ -30,7 +30,7 @@ class Gen_DB():
                 sql = "SELECT * FROM user"
                 cursor.execute(sql)
                 for data in cursor:
-                    if self.user_hash == data[0]:
+                    if self.user_hash(user) == data[0]:
                         del sql; del cursor
                         print("Sucessfully logged in DB: [%s]" % db_name)
                         return connection
@@ -57,7 +57,7 @@ class Gen_DB():
                     f"Username TEXT)"
                 cursor.execute(sql)
 
-                sql = f"INSERT INTO user VALUES('{self.user_hash}')"
+                sql = f"INSERT INTO user VALUES('{self.user_hash(user)}')"
                 cursor.execute(sql)
                 connection.commit()
 

@@ -1,13 +1,21 @@
+# Author: PiereLucas(Julian Huch)
+# MIT LICENSE
+
+
+""" 
+This is just a small and thin wrapper around the zxcvbn (password scoring) library from dropbox.
+It gives you in return a dictionary with some infos about your given password.
+usage: scoring = password_scoring.Scoring(password)
+       results = scoring()
+"""
+
+
 from zxcvbn import zxcvbn as passcheck
 
 
 class Scoring():
-    """ 
-    This is just a small and thin wrapper around the zxcvbn library from dropbox.
-    It gives you in return a dictionary with some infos about your given password.
-    usage: scoring = password_scoring.Scoring(password)
-           results = scoring()
-    """
+    """ Callable Scoring Class """
+
 
     def __init__(self, password):
         self.user_password = password
