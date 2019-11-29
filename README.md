@@ -1,6 +1,8 @@
-## PyPassword - Manager // Simple and Crypted
+# PyPassword - Manager // Simple and Crypted
 
 + How to use:
+
+        python3 main.py
 
         There's a easy to use CLI. In the interface you can Write, Read and Delete entrys from the Database.
 
@@ -10,6 +12,10 @@
 
 + What are the requirements:
 
-        PyPassword uses sqlite3 database.
+        pip3 install zxcvbn && pip3 install pycrypto
 
-### There's currently a additional GUI file in the repo. Don't      use it! That file was just for testing some stuff for a GUI     version i will upload later.
++ Info:
+
+        There's currently a additional GUI file in the repo.
+        Don't use it! That file was just for testing some stuff for a GUI
+        version i will upload later.
