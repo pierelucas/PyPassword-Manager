@@ -7,14 +7,14 @@ import os
 import sys
 import random
 import time
-from hashlib import sha256
+from hashlib import sha3_512
 
 
 class Gen_DB():
     """ Class for checking of the given database and username exists """
 
     def __init__(self, db_name, user):
-        self.user_hash = lambda x: sha256(x.encode("UTF-8")).hexdigest()
+        self.user_hash = lambda x: sha3_512(x.encode("UTF-8")).hexdigest()
         self.connection = self.generate_db(db_name, user)
 
     def __repr__(self):
